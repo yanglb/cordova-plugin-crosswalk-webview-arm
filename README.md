@@ -1,113 +1,63 @@
-# cordova-plugin-crosswalk-webview
+# cordova-plugin-crosswalk-webview-v3
 
-Makes your Cordova application use the [Crosswalk WebView](https://crosswalk-project.org/)
-instead of the System WebView. Requires cordova-android 4.0 or greater.
+This is a fork of original [cordova-plugin-crosswalk-webview](https://github.com/crosswalk-project/cordova-plugin-crosswalk-webview) library, which aims to provide compatibility with latest cordova versions.
 
-### Benefits
+Since there is still a lot of android devices with legacy webview (before 7.0), crosswalk-webview project still makes sense for android. 
 
-* WebView doesn't change depending on Android version
-* Capabilities: such as WebRTC, WebAudio, Web Components
-* Performance improvements (compared to older system webviews)
+For detailed information about crosswalk, please visit the homepage of original library. 
 
-
-### Drawbacks
-
-* Increased memory footprint
-  * An overhead of ~30MB (as reported by the RSS column of ps)
-* Increased APK size (about 17MB)
-* Increased size on disk when installed (about 50MB)
-* Crosswalk WebView stores data (IndexedDB, LocalStorage, etc) separately from System WebView
-  * You'll need to manually migrate local data when switching between the two (note: this is fixed in Crosswalk 15)
 
 ### Install
 
-The following directions are for cordova-cli (most people).  Alternatively you can use the [Android platform scripts workflow](PlatformScriptsWorkflow.md).
-
-* Open an existing cordova project, with cordova-android 4.0.0+, and using the latest CLI. Crosswalk variables can be configured as an option when installing the plugin
 * Add this plugin
 
 ```
-$ cordova plugin add cordova-plugin-crosswalk-webview
+$ cordova plugin add cordova-plugin-crosswalk-webview-v3
 ```
 
 * Build
 ```
 $ cordova build android
 ```
-The build script will automatically fetch the Crosswalk WebView libraries from Crosswalk project download site (https://download.01.org/crosswalk/releases/crosswalk/android/maven2/) and build for both X86 and ARM architectures.
+The build script will automatically fetch the Crosswalk WebView libraries from Crosswalk project download site (https://download.01.org/crosswalk/releases/crosswalk/android/maven2/) and build for both X86 and ARM architectures by default.
 
-For example, building android with Crosswalk generates:
 
-```
-/path/to/hello/platforms/android/build/outputs/apk/hello-x86-debug.apk
-/path/to/hello/platforms/android/build/outputs/apk/hello-armv7-debug.apk
-```
-
-Note that you might have to run `cordova clean` before building, if you previously built the app without cordova-plugin-crosswalk-webview. Also, manually uninstall the app from the device/emulator before attempting to install the crosswalk-enabled version.
-
-Also note that it is also possible to publish a multi-APK application on the Play Store that uses Crosswalk for Pre-L devices, and the (updatable) system webview for L+:
-
-To build Crosswalk-enabled apks, add this plugin and run:
+To build Crosswalk-enabled 32-bit apks for release:
 
     $ cordova build --release
 
-To build System-webview apk, remove this plugin and run:
+It will generate following apks:
 
-    $ cordova build --release -- --minSdkVersion=21
+```
+platforms/android/app/build/outputs/apk/armv7/release/app-armv7-release-unsigned.apk
+platforms/android/app/build/outputs/apk/x86/release/app-x86-release-unsigned.apk
+```
 
-### Configure
+Google changed some policies at 2019 August, and now every app in the market requires 64-bit apks. To do that:
 
-You can try out a different Crosswalk version by specifying certain variables while installing the plugin, or by changing the value of `xwalkVersion` in your `config.xml` after installing the plugin. Some examples:
+    $ cordova build --release --xwalk64bit
 
-    <!-- These are all equivalent -->
-    cordova plugin add cordova-plugin-crosswalk-webview --variable XWALK_VERSION="org.xwalk:xwalk_core_library:14+"
-    cordova plugin add cordova-plugin-crosswalk-webview --variable XWALK_VERSION="xwalk_core_library:14+"
-    cordova plugin add cordova-plugin-crosswalk-webview --variable XWALK_VERSION="14+"
-    cordova plugin add cordova-plugin-crosswalk-webview --variable XWALK_VERSION="14"
-    <preference name="xwalkVersion" value="org.xwalk:xwalk_core_library:14+" />
-    <preference name="xwalkVersion" value="xwalk_core_library:14+" />
-    <preference name="xwalkVersion" value="14+" />
-    <preference name="xwalkVersion" value="14" />
+It will generate following apks:
 
-You can also use a Crosswalk beta version. Some examples:
+```
+platforms/android/app/build/outputs/apk/arm64/release/app-arm64-release-unsigned.apk
+platforms/android/app/build/outputs/apk/x86_64/release/app-x86_64-release-unsigned.apk
+```
 
-    <!-- These are all equivalent -->
-    cordova plugin add cordova-plugin-crosswalk-webview --variable XWALK_VERSION="org.xwalk:xwalk_core_library_beta:14+"
-    <preference name="xwalkVersion" value="org.xwalk:xwalk_core_library_beta:14+" />
+The above apks will be build for each architecture separately only if multiple akps are configured as below in config.xml:
 
-You can set [command-line flags](http://peter.sh/experiments/chromium-command-line-switches/) as well:
+```
+<preference name="xwalkMultipleApk" value="true" />
+```
 
-    <!-- This is the default -->
-    cordova plugin add cordova-plugin-crosswalk-webview --variable XWALK_COMMANDLINE="--disable-pull-to-refresh-effect"
-    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
-
-You can use the Crosswalk [shared mode](https://crosswalk-project.org/documentation/shared_mode.html) which allows multiple Crosswalk applications to share one Crosswalk runtime downloaded from the Play Store.
-
-    <!-- These are all equivalent -->
-    cordova plugin add cordova-plugin-crosswalk-webview  --variable XWALK_MODE="shared"
-    <preference name="xwalkMode" value="shared" />
-
-You can also use a Crosswalk beta version on shared mode, e.g.:
-
-    <!-- Using a Crosswalk shared mode beta version -->
-    cordova plugin add cordova-plugin-crosswalk-webview --variable XWALK_VERSION="org.xwalk:xwalk_shared_library_beta:14+"
-
-You can use the Crosswalk [lite mode](https://crosswalk-project.org/documentation/crosswalk_lite.html) which is the Crosswalk runtime designed to be as small as possible by removing less common libraries and features and compressing the APK.
-
-    <!-- These are all equivalent -->
-    cordova plugin add cordova-plugin-crosswalk-webview  --variable XWALK_MODE="lite"
-    <preference name="xwalkMode" value="lite" />
-
-You can set background color with the preference of BackgroundColor.
-
-    <!-- Set red background color -->
-    <preference name="BackgroundColor" value="0xFFFF0000" />
-
-You can also set user agent with the preference of xwalkUserAgent.
-
-    <preference name="xwalkUserAgent" value="customer UA" />
+If you don't need to support older devices with 32bit architectures, you should only build for 64-bit, sign and upload them to play store.
+However, if there are still older devices running your app, you must build and sign all 4 of them and upload each to play store.
 
 ### Release Notes
+
+#### 3.0.0 (November 10, 2019)
+* Added compatibility with cordova 9
+* Fixed version code calculation for 64bit builds (aligned them with 32bit build codes)
 
 #### 2.4.0 (January 18, 2018)
 * Keep compatibility with cordova-android 7.0 project structure
