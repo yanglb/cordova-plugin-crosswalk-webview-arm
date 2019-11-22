@@ -53,6 +53,8 @@ The above apks will be build for each architecture separately only if multiple a
 If you don't need to support older devices with 32bit architectures, you should only build for 64-bit, sign and upload them to play store.
 However, if there are still older devices running your app, you must build and sign all 4 of them and upload each to play store.
 
+Check this gist to build all of them in one bash script: (<https://gist.github.com/ardabeyazoglu/ff505d06bd576b966ad7f1c932f7c6ed>)
+
 ### Release Notes
 
 #### 3.0.0 (November 10, 2019)
