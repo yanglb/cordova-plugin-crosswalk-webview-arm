@@ -57,7 +57,7 @@ Check this gist to build all of them in one bash script: (<https://gist.github.c
 
 ### Release Notes
 
-#### 3.0.0 (November 10, 2019)
+#### 3.0.2 (November 10, 2019)
 * Added compatibility with cordova 9
 * Fixed version code calculation for 64bit builds (aligned them with 32bit build codes)
 
