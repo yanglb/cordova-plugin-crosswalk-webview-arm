@@ -52,8 +52,8 @@
         <framework src="platforms/android/xwalk.gradle" custom="true" type="gradleReference"/>
             
         <!-- armv7 -->
-        <resource-file src="src/android/armeabi-v7a/libxwalkcore.so" target="jniLibs/armeabi-v7a/libxwalkcore.so"/>
-        <resource-file src="src/android/armeabi-v7a/libxwalkdummy.so" target="jniLibs/armeabi-v7a/libxwalkdummy.so"/>
+        <resource-file src="platforms/android/armeabi-v7a/libxwalkcore.so" target="jniLibs/armeabi-v7a/libxwalkcore.so"/>
+        <resource-file src="platforms/android/armeabi-v7a/libxwalkdummy.so" target="jniLibs/armeabi-v7a/libxwalkdummy.so"/>
 
         <hook type="after_plugin_install" src="hooks/after_plugin_install/000-shared_mode_special.js"/>
         <hook type="before_plugin_uninstall" src="hooks/before_plugin_uninstall/000-shared_mode_special.js"/>
