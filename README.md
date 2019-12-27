@@ -1,61 +1,42 @@
-# cordova-plugin-crosswalk-webview-v3
+# cordova-plugin-crosswalk-webview-arm
 
-This is a fork of original [cordova-plugin-crosswalk-webview](https://github.com/crosswalk-project/cordova-plugin-crosswalk-webview) library, which aims to provide compatibility with latest cordova versions.
+This is a fork of original [cordova-plugin-crosswalk-webview-v3](https://github.com/ardabeyazoglu/cordova-plugin-crosswalk-webview-v3) library, which aims to provide compatibility with latest cordova versions.
 
 Since there is still a lot of android devices with legacy webview (before 7.0), crosswalk-webview project still makes sense for android. 
 
 For detailed information about crosswalk, please visit the homepage of original library. 
-
 
 ### Install
 
 * Add this plugin
 
 ```
-$ cordova plugin add cordova-plugin-crosswalk-webview-v3
+$ cordova plugin add cordova-plugin-crosswalk-webview-arm
 ```
 
 * Build
 ```
 $ cordova build android
 ```
-The build script will automatically fetch the Crosswalk WebView libraries from Crosswalk project download site (https://download.01.org/crosswalk/releases/crosswalk/android/maven2/) and build for both X86 and ARM architectures by default.
+The build script will automatically fetch the Crosswalk WebView libraries from Crosswalk project download site (https://download.01.org/crosswalk/releases/crosswalk/android/maven2/) and build for ARM(v7/64) architectures by default.
 
 
-To build Crosswalk-enabled 32-bit apks for release:
+To build Crosswalk-enabled armv7 and arm64 apks for release:
 
     $ cordova build --release
 
 It will generate following apks:
 
 ```
-platforms/android/app/build/outputs/apk/armv7/release/app-armv7-release-unsigned.apk
-platforms/android/app/build/outputs/apk/x86/release/app-x86-release-unsigned.apk
+platforms/android/app/build/outputs/apk/armv7/release/app-arm-release-unsigned.apk
 ```
-
-Google changed some policies at 2019 August, and now every app in the market requires 64-bit apks. To do that:
-
-    $ cordova build --release --xwalk64bit
-
-It will generate following apks:
-
-```
-platforms/android/app/build/outputs/apk/arm64/release/app-arm64-release-unsigned.apk
-platforms/android/app/build/outputs/apk/x86_64/release/app-x86_64-release-unsigned.apk
-```
-
-The above apks will be build for each architecture separately only if multiple akps are configured as below in config.xml:
-
-```
-<preference name="xwalkMultipleApk" value="true" />
-```
-
-If you don't need to support older devices with 32bit architectures, you should only build for 64-bit, sign and upload them to play store.
-However, if there are still older devices running your app, you must build and sign all 4 of them and upload each to play store.
 
 Check this gist to build all of them in one bash script: (<https://gist.github.com/ardabeyazoglu/ff505d06bd576b966ad7f1c932f7c6ed>)
 
 ### Release Notes
+
+#### 3.1.0 (December 27, 2019)
+* Generate armv7 and arm64 apk at the same time
 
 #### 3.0.2 (November 10, 2019)
 * Added compatibility with cordova 9
